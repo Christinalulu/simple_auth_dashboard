@@ -7,25 +7,34 @@ import { useNavigate, Link} from "react-router-dom";
 
 
 
-
-
 function Register(){
 
      const [ email, setEmail] = useState("");
-
      const [ password, setPassword] = useState("");
-
      const navigate = useNavigate();
+     const [error, setError] = useState("");
 
 
      function handleRegister(){
-        const user = {
-        email,
-        password,
-    };
-    localStorage.setItem("registeredUser", JSON.stringify(user));
 
+      const exisitingUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+      const userExists = exisitingUsers.some((user) => user.email === email);
+
+      if(userExists){
+        setError("Email already registrered");
+        return;
+      }
+
+      const newUser = { email, password};
+
+      const updateUsers = [...exisitingUsers, newUser];
+
+
+    localStorage.setItem("users", JSON.stringify(updateUsers));
+    setError("");
     navigate("/");
+    
      }
 
 
@@ -56,6 +65,12 @@ return (
         >
           Register
         </button>
+
+        {error && (
+          <p className=" text-red-500 mt-3 text-center">
+            {error}
+             </p>
+        )}
 
         <p className="mt-4 text-center">
           Har du bruker?{" "}

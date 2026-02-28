@@ -9,27 +9,42 @@ function Login(){
     const [ email ,setEmail] = useState("");
     const [ password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [ error, setError] = useState("");
 
 
     function handleLogin(){
 
-        const savedUser = JSON.parse(
-            localStorage.getItem("registeredUser")
-        );
+        // const savedUser = JSON.parse(
+        //     localStorage.getItem("registeredUser")
+        // );
 
-        if(
-            savedUser &&
-            savedUser.email === email &&
-            savedUser.password === password
-        )
+        // if(
+        //     savedUser &&
+        //     savedUser.email === email &&
+        //     savedUser.password === password
+        // )
         
-        {
-            localStorage.setItem("user", JSON.stringify(savedUser));
-            navigate ("/dashboard");
-        }else{
-            alert("Feil email eller password")
+        // {
+        //     localStorage.setItem("user", JSON.stringify(savedUser));
+        //     navigate ("/dashboard");
+        // }else{
+        //     setError("Feil email eller password")
+        // }
+
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const foundUser = users.find(
+          (user) => user.email === email && user.password === password
+        );
+        
+        if(foundUser){
+          localStorage.setItem("user", JSON.stringify(foundUser));
+          navigate("/dashboard");
+        } else {
+          setError("feil email eller passord")
         }
     }
+
+    const isFromValid = email.trim() !== "" && password.trim() !== "";
 
 return(
 
@@ -55,10 +70,19 @@ return(
 
         <button
           onClick={handleLogin}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          disabled={!isFromValid}
+          className={` w-full p-2 rounded text-white ${isFromValid 
+            ? "bg-blue-500 hover:bg-blue-600" 
+            : "bg-gray-400 cursor-not-allowed"} `}
         >
           Login
         </button>
+
+        {error && (
+          <p className=" text-red-500 mt-3 text-center">
+            {error}
+             </p>
+        )}
 
         <p className="mt-4 text-center">
           Ingen bruker?{" "}
