@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate , Link} from "react-router-dom";
-
+import  useAuth  from "../hooks/useAuth";
 
 
 
 function Login(){
 
+    const {login} = useAuth();
     const [ email ,setEmail] = useState("");
     const [ password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -14,34 +15,15 @@ function Login(){
 
     function handleLogin(){
 
-        // const savedUser = JSON.parse(
-        //     localStorage.getItem("registeredUser")
-        // );
 
-        // if(
-        //     savedUser &&
-        //     savedUser.email === email &&
-        //     savedUser.password === password
-        // )
-        
-        // {
-        //     localStorage.setItem("user", JSON.stringify(savedUser));
-        //     navigate ("/dashboard");
-        // }else{
-        //     setError("Feil email eller password")
-        // }
+      const result = login( email, password);
 
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-        const foundUser = users.find(
-          (user) => user.email === email && user.password === password
-        );
-        
-        if(foundUser){
-          localStorage.setItem("user", JSON.stringify(foundUser));
-          navigate("/dashboard");
-        } else {
-          setError("feil email eller passord")
-        }
+      if(result.success){
+        navigate("/dashboard");
+      }else{
+        setError(result.message);
+      }
+
     }
 
     const isFromValid = email.trim() !== "" && password.trim() !== "";

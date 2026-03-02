@@ -1,14 +1,11 @@
 import {useState} from "react";
 import { useNavigate, Link} from "react-router-dom";
-
-
-
-
-
+import  useAuth  from "../hooks/useAuth";
 
 
 function Register(){
 
+  const {register} = useAuth();
      const [ email, setEmail] = useState("");
      const [ password, setPassword] = useState("");
      const navigate = useNavigate();
@@ -16,26 +13,15 @@ function Register(){
 
 
      function handleRegister(){
+      const result = register(email, password);
 
-      const exisitingUsers = JSON.parse(localStorage.getItem("users")) || [];
-
-      const userExists = exisitingUsers.some((user) => user.email === email);
-
-      if(userExists){
-        setError("Email already registrered");
-        return;
+      if(result.success){
+        navigate("/")
+      }else{
+        setError(result.message);
       }
+    };
 
-      const newUser = { email, password};
-
-      const updateUsers = [...exisitingUsers, newUser];
-
-
-    localStorage.setItem("users", JSON.stringify(updateUsers));
-    setError("");
-    navigate("/");
-    
-     }
 
 
 return (
