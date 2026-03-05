@@ -15,7 +15,7 @@ const TaskForm = ({ addTask }) => {
   return (
     <form
       onSubmit={handelSubmit}
-      className="bg-white p-4 rounded-xl shadow-md flex gap-3"
+      className="bg-white p-2 rounded-xl shadow-md  flex gap-3 "
     >
       <input
         type="text"
