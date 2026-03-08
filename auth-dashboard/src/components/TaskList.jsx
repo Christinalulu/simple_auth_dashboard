@@ -1,7 +1,7 @@
 import TaskItem from "./TaskItem";
 
 
-const TaskList = ({ tasks, toggleTask, deleteTask}) => {
+const TaskList = ({ tasks, toggleTask, deleteTask, editTask}) => {
 return (
     <div className="mt-6 space-y-3">
       {tasks.map((task) => (
@@ -10,6 +10,7 @@ return (
           task={task}
           toggleTask={toggleTask}
           deleteTask={deleteTask}
+          editTask={editTask}
         />
       ))}
     </div>

@@ -28,8 +28,6 @@ function Dashboard() {
     return matchesFilter && matchesSearch;
   });
 
-
-
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -37,6 +35,7 @@ function Dashboard() {
   const total = tasks.length;
   const completed = tasks.filter((task) => task.completed).length;
   const pending = total - completed;
+  const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
   const addTask = (title) => {
     const newTask = {
@@ -60,6 +59,14 @@ function Dashboard() {
     setTasks(filteredTasks);
   };
 
+  const editTask = (id, newTitle) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, title: newTitle } : task,
+    );
+
+    setTasks(updatedTasks);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
@@ -73,6 +80,22 @@ function Dashboard() {
           <StatsCard title="Pending" value={pending} />
         </div>
 
+        <div className="bg-white p-4 rounded-xl shadow">
+          <div className="flex justify-between mb-2">
+            <span className="text-sm font-semibold text-gray-600">
+              Progress
+            </span>
+            <span className="text-sm font-bold">{progress}%</span>
+          </div>
+
+          <div className="w-full bg-gray-200 h-3 rounded-full">
+            <div
+              className="bg-blue-500 h-3 rounded-full transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+
         <TaskForm addTask={addTask} />
 
         <input
@@ -82,7 +105,7 @@ function Dashboard() {
           onChange={(e) => setSearch(e.target.value)}
           className="border p-2 rounded w-full"
         />
-                                                                                                                      
+
         <div className="flex gap-3">
           <button
             onClick={() => setFilter("all")}
@@ -109,6 +132,7 @@ function Dashboard() {
           tasks={filteredTasks}
           toggleTask={toggleTask}
           deleteTask={deleteTask}
+          editTask={editTask}
         />
       </div>
     </div>
